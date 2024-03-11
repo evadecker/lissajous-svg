@@ -5,7 +5,7 @@
 	let params = {
 		angularFrequency: { x: 3, y: 4 },
 		phaseShift: Math.PI / 2,
-		strokeWidth: 1.5,
+		strokeWidth: 1,
 		gridCount: 10,
 		gridTickCount: 5,
 		gridTickSize: 1,
