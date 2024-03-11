@@ -7,11 +7,11 @@
 		phaseShift: Math.PI / 2,
 		strokeWidth: 1,
 		gridCount: 10,
-		gridTickCount: 5,
+		gridTickCount: 4,
 		gridTickSize: 1,
-		gridStrokeWidth: 0.4,
+		gridStrokeWidth: 0.2,
 		primary: 'hsl(23, 93%, 53%)',
-		secondary: 'hsl(28, 57%, 23%)'
+		secondary: 'hsl(28, 6%, 48%)'
 	};
 
 	const draw = () => {
@@ -157,7 +157,7 @@
 
 		equation.addBinding(params, 'strokeWidth', {
 			label: 'stroke',
-			min: 0.5,
+			min: 0.1,
 			max: 3,
 			step: 0.1
 		});
@@ -189,7 +189,7 @@
 
 		grid.addBinding(params, 'gridStrokeWidth', {
 			label: 'stroke',
-			min: 0.2,
+			min: 0.1,
 			max: 1,
 			step: 0.1
 		});
