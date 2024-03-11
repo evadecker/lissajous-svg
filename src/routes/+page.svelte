@@ -26,6 +26,11 @@
 		const drawGrid = (svg: Element, count: number, width: number) => {
 			if (count === 0) return;
 
+      const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      group.classList.add('grid');
+      group.setAttribute('stroke', `var(--${params.color}-4)`);
+				group.setAttribute('stroke-width', `${width}`);
+
 			// Major horizontal lines
 			for (let i = 0; i <= count; i++) {
 				const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
@@ -33,9 +38,7 @@
 				line.setAttribute('y1', `${((200 - width) / count) * i + width / 2}`);
 				line.setAttribute('x2', '200');
 				line.setAttribute('y2', `${((200 - width) / count) * i + width / 2}`);
-				line.setAttribute('stroke', `var(--${params.color}-4)`);
-				line.setAttribute('stroke-width', `${width}`);
-				svg.appendChild(line);
+				group.appendChild(line);
 			}
 
 			// Major vertical lines
@@ -45,9 +48,7 @@
 				line.setAttribute('y1', `${width}`);
 				line.setAttribute('x2', `${((200 - width) / count) * i + width / 2}`);
 				line.setAttribute('y2', `${200 - width}`);
-				line.setAttribute('stroke', `var(--${params.color}-4)`);
-				line.setAttribute('stroke-width', `${width}`);
-				svg.appendChild(line);
+				group.appendChild(line);
 			}
 
 			// Minor horizontal tickmarks
@@ -63,9 +64,7 @@
 					'y2',
 					`${((200 - width) / count / (params.gridTickCount + 1)) * i + width / 2}`
 				);
-				line.setAttribute('stroke', `var(--${params.color}-4)`);
-				line.setAttribute('stroke-width', `${width}`);
-				svg.appendChild(line);
+				group.appendChild(line);
 			}
 
 			// Minor vertical tickmarks
@@ -81,19 +80,20 @@
 					`${((200 - width) / count / (params.gridTickCount + 1)) * i + width / 2}`
 				);
 				line.setAttribute('y2', `${200 / 2 + params.gridTickSize}`);
-				line.setAttribute('stroke', `var(--${params.color}-4)`);
-				line.setAttribute('stroke-width', `${width}`);
-				svg.appendChild(line);
+				group.appendChild(line);
 			}
+
+      svg.appendChild(group);
 		};
 
 		const drawLissajous = (svg: Element, a: number, b: number) => {
-      const filter = document.createElementNS('http://www.w3.org/2000/svg', 'filter');
-      filter.setAttribute('id', 'glow');
-      filter.innerHTML = `
-        <feDropShadow dx="0" dy="0" stdDeviation="2" flood-color="var(--${params.color}-9)" />
-      `;
-      svg.appendChild(filter);
+      const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      group.classList.add('lissajous');
+      group.setAttribute('fill', 'none');
+			group.setAttribute('stroke', `var(--${params.color}-9)`);
+			group.setAttribute('stroke-width', `${params.strokeWidth}`);
+			group.setAttribute('stroke-linecap', 'square');
+			group.setAttribute('stroke-linejoin', 'round');
 
 			const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
 			const points = [];
@@ -105,14 +105,9 @@
 			}
 
 			path.setAttribute('d', `M${points.join('L')}`);
-			path.setAttribute('fill', 'none');
-			path.setAttribute('stroke', `var(--${params.color}-9)`);
-			path.setAttribute('stroke-width', `${params.strokeWidth}`);
-			path.setAttribute('stroke-linecap', 'square');
-			path.setAttribute('stroke-linejoin', 'round');
-      path.setAttribute('filter', 'url(#glow)');
+			group.appendChild(path);
 
-			svg.appendChild(path);
+      svg.appendChild(group);
 		};
 
 		if (svg) {
@@ -206,6 +201,32 @@
 			}
 		});
 
+    const download = pane.addFolder({
+      title: 'Download'
+    });
+
+    const btn = download.addButton({
+      title: 'Download SVG',
+    });
+
+    btn.on('click', () => {
+      const svg = document.querySelector('.canvas');
+
+      if (!svg) return;
+      svg.setAttribute('stroke', '#000');
+
+      const svgData = new XMLSerializer().serializeToString(svg);
+      const blob = new Blob([svgData], { type: 'image/svg+xml' });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'lissajous.svg';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    });
+
 		pane.on('change', () => {
 			draw();
 		});
@@ -228,13 +249,13 @@
 <style>
   @keyframes pulse {
     0% {
-      opacity: 0.03;
+      opacity: 0.02;
     }
     50% {
-      opacity: 0.04;
+      opacity: 0.026;
     }
     100% {
-      opacity: 0.03;
+      opacity: 0.02;
     }
   }
 
