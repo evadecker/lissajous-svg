@@ -88,6 +88,13 @@
 		};
 
 		const drawLissajous = (svg: Element, a: number, b: number) => {
+      const filter = document.createElementNS('http://www.w3.org/2000/svg', 'filter');
+      filter.setAttribute('id', 'glow');
+      filter.innerHTML = `
+        <feDropShadow dx="0" dy="0" stdDeviation="2" flood-color="var(--${params.color}-9)" />
+      `;
+      svg.appendChild(filter);
+
 			const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
 			const points = [];
 
@@ -103,6 +110,8 @@
 			path.setAttribute('stroke-width', `${params.strokeWidth}`);
 			path.setAttribute('stroke-linecap', 'square');
 			path.setAttribute('stroke-linejoin', 'round');
+      path.setAttribute('filter', 'url(#glow)');
+
 			svg.appendChild(path);
 		};
 
@@ -214,8 +223,21 @@
 
 <h1 class="visually-hidden">Lissajous Curve Generator</h1>
 <svg class="canvas" viewBox="0 0 200 200"></svg>
+<div class="lcd"></div>
 
 <style>
+  @keyframes pulse {
+    0% {
+      opacity: 0.03;
+    }
+    50% {
+      opacity: 0.04;
+    }
+    100% {
+      opacity: 0.03;
+    }
+  }
+
 	.visually-hidden {
 		clip: rect(0 0 0 0);
 		clip-path: inset(50%);
@@ -230,4 +252,13 @@
 		width: 90vmin;
 		height: 90vmin;
 	}
+
+  .lcd {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(#fff, #fff 2px, #000 2px, #000 4px);
+    animation: pulse 0.1s infinite;
+  }
 </style>
