@@ -117,7 +117,9 @@
 	};
 
 	const setupPane = () => {
-		const pane = new Pane();
+		const pane = new Pane({
+			container: document.getElementById('controls')!,
+		});
 
 		const equation = pane.addFolder({
 			title: 'Lissajous Curve'
@@ -242,9 +244,12 @@
 	<title>Lissajous Curve Generator</title>
 </svelte:head>
 
-<h1 class="visually-hidden">Lissajous Curve Generator</h1>
-<svg class="canvas" viewBox="0 0 200 200"></svg>
-<div class="lcd"></div>
+<div class="content">
+	<h1 class="visually-hidden">Lissajous Curve Generator</h1>
+	<svg class="canvas" viewBox="0 0 200 200"></svg>
+	<div class="lcd"></div>
+	<div id="controls"></div>
+</div>
 
 <style>
   @keyframes pulse {
@@ -259,6 +264,19 @@
     }
   }
 
+	.content {
+		padding: 24px;
+		display: flex;
+		gap: 24px;
+	}
+
+	@media (width < 760px) {
+		.content {
+			flex-direction: column;
+			align-items: center;
+		}
+	}
+
 	.visually-hidden {
 		clip: rect(0 0 0 0);
 		clip-path: inset(50%);
@@ -271,7 +289,8 @@
 
 	.canvas {
 		width: 90vmin;
-		height: 90vmin;
+		max-width: 100%;
+		flex: 1;
 	}
 
   .lcd {
@@ -282,4 +301,8 @@
     background: repeating-linear-gradient(#fff, #fff 2px, #000 2px, #000 4px);
     animation: pulse 0.1s infinite;
   }
+
+	#controls {
+		flex-shrink: 0;
+	}
 </style>
