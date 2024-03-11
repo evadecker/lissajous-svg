@@ -240,10 +240,6 @@
 	});
 </script>
 
-<svelte:head>
-	<title>Lissajous Curve Generator</title>
-</svelte:head>
-
 <div class="content">
 	<h1 class="visually-hidden">Lissajous Curve Generator</h1>
 	<svg class="canvas" viewBox="0 0 200 200"></svg>
