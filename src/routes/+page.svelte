@@ -5,12 +5,13 @@
 	let params = {
 		angularFrequency: { x: 3, y: 4 },
 		phaseShift: Math.PI / 2,
-		strokeWidth: 1,
-		gridCount: 4,
-		gridTickCount: 4,
-		gridTickSize: 2,
-		gridStrokeWidth: 0.5,
-		color: 'orange'
+		strokeWidth: 1.5,
+		gridCount: 10,
+		gridTickCount: 5,
+		gridTickSize: 1,
+		gridStrokeWidth: 0.4,
+		primary: 'hsl(23, 93%, 53%)',
+		secondary: 'hsl(28, 57%, 23%)'
 	};
 
 	const draw = () => {
@@ -28,7 +29,7 @@
 
       const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
       group.classList.add('grid');
-      group.setAttribute('stroke', `var(--${params.color}-4)`);
+      group.setAttribute('stroke', `${params.secondary}`);
 				group.setAttribute('stroke-width', `${width}`);
 
 			// Major horizontal lines
@@ -54,33 +55,39 @@
 			// Minor horizontal tickmarks
 			for (let i = 0; i <= count * (params.gridTickCount + 1); i++) {
 				const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-				line.setAttribute('x1', `${200 / 2 - params.gridTickSize}`);
-				line.setAttribute(
-					'y1',
-					`${((200 - width) / count / (params.gridTickCount + 1)) * i + width / 2}`
-				);
-				line.setAttribute('x2', `${200 / 2 + params.gridTickSize}`);
-				line.setAttribute(
-					'y2',
-					`${((200 - width) / count / (params.gridTickCount + 1)) * i + width / 2}`
-				);
-				group.appendChild(line);
+				
+				if (i % (params.gridTickCount + 1)) {
+					line.setAttribute('x1', `${200 / 2 - params.gridTickSize}`);
+					line.setAttribute(
+						'y1',
+						`${((200 - width) / count / (params.gridTickCount + 1)) * i + width / 2}`
+					);
+					line.setAttribute('x2', `${200 / 2 + params.gridTickSize}`);
+					line.setAttribute(
+						'y2',
+						`${((200 - width) / count / (params.gridTickCount + 1)) * i + width / 2}`
+					);
+					group.appendChild(line);
+				}
 			}
 
 			// Minor vertical tickmarks
 			for (let i = 0; i <= count * (params.gridTickCount + 1); i++) {
 				const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-				line.setAttribute(
-					'x1',
-					`${((200 - width) / count / (params.gridTickCount + 1)) * i + width / 2}`
-				);
-				line.setAttribute('y1', `${200 / 2 - params.gridTickSize}`);
-				line.setAttribute(
-					'x2',
-					`${((200 - width) / count / (params.gridTickCount + 1)) * i + width / 2}`
-				);
-				line.setAttribute('y2', `${200 / 2 + params.gridTickSize}`);
-				group.appendChild(line);
+
+				if (i % (params.gridTickCount + 1)) {
+					line.setAttribute(
+						'x1',
+						`${((200 - width) / count / (params.gridTickCount + 1)) * i + width / 2}`
+					);
+					line.setAttribute('y1', `${200 / 2 - params.gridTickSize}`);
+					line.setAttribute(
+						'x2',
+						`${((200 - width) / count / (params.gridTickCount + 1)) * i + width / 2}`
+					);
+					line.setAttribute('y2', `${200 / 2 + params.gridTickSize}`);
+					group.appendChild(line);
+				}
 			}
 
       svg.appendChild(group);
@@ -90,7 +97,7 @@
       const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
       group.classList.add('lissajous');
       group.setAttribute('fill', 'none');
-			group.setAttribute('stroke', `var(--${params.color}-9)`);
+			group.setAttribute('stroke', `${params.primary}`);
 			group.setAttribute('stroke-width', `${params.strokeWidth}`);
 			group.setAttribute('stroke-linecap', 'square');
 			group.setAttribute('stroke-linejoin', 'round');
@@ -169,7 +176,7 @@
 		grid.addBinding(params, 'gridTickCount', {
 			label: 'tickmarks',
 			min: 0,
-			max: 8,
+			max: 10,
 			step: 1
 		});
 
@@ -187,27 +194,18 @@
 			step: 0.1
 		});
 
-		const style = pane.addFolder({
-			title: 'Style'
+		const color = pane.addFolder({
+			title: 'Color'
 		});
 
-		style.addBinding(params, 'color', {
-			options: {
-				red: 'red',
-				orange: 'orange',
-				yellow: 'amber',
-        lime: 'lime',
-				teal: 'teal',
-				violet: 'violet',
-        pink: 'pink'
-			}
+		color.addBinding(params, 'primary');
+		color.addBinding(params, 'secondary');
+
+    pane.addBlade({
+			view: 'separator'
 		});
 
-    const download = pane.addFolder({
-      title: 'Download'
-    });
-
-    const btn = download.addButton({
+    const btn = pane.addButton({
       title: 'Download SVG',
     });
 
@@ -215,8 +213,6 @@
       const svg = document.querySelector('.canvas');
 
       if (!svg) return;
-      svg.setAttribute('stroke', '#000');
-
       const svgData = new XMLSerializer().serializeToString(svg);
       const blob = new Blob([svgData], { type: 'image/svg+xml' });
       const url = URL.createObjectURL(blob);
@@ -228,6 +224,18 @@
       a.click();
       document.body.removeChild(a);
     });
+
+		pane.addBlade({
+			view: 'separator'
+		});
+
+		const source = pane.addButton({
+			title: 'View Source',
+		});
+
+		source.on('click', () => {
+			window.open('https://github.com/evadecker/lissajous-svg');
+		});
 
 		pane.on('change', () => {
 			draw();
@@ -296,9 +304,13 @@
     height: 100%;
     background: repeating-linear-gradient(#fff, #fff 2px, #000 2px, #000 4px);
     animation: pulse 0.1s infinite;
+		pointer-events: none;
   }
 
 	#controls {
 		flex-shrink: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 24px;
 	}
 </style>

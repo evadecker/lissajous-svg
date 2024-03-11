@@ -38,7 +38,29 @@
 @import '@radix-ui/colors/pink-dark.css';
 @import '@radix-ui/colors/pink-dark-alpha.css';
 
-:root {
+:root, .dark {
   /* Font families */
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+
+  --tp-base-background-color: var(--sand-3);
+  --tp-base-shadow-color: hsla(0, 0%, 0%, 0.30);
+  --tp-button-background-color: var(--sand-9);
+  --tp-button-background-color-active: var(--sand-10);
+  --tp-button-background-color-focus: var(--sand-11);
+  --tp-button-background-color-hover: var(--sand-11);
+  --tp-button-foreground-color: var(--sand-3);
+  --tp-container-background-color: var(--sand-3);
+  --tp-container-background-color-active: var(--sand-4);
+  --tp-container-background-color-focus: var(--sand-5);
+  --tp-container-background-color-hover: var(--sand-5);
+  --tp-container-foreground-color: var(--sand-11);
+  --tp-groove-foreground-color: var(--sand-6);
+  --tp-input-background-color: var(--sand-5);
+  --tp-input-background-color-active: var(--sand-6);
+  --tp-input-background-color-focus: var(--sand-6);
+  --tp-input-background-color-hover: var(--sand-6);
+  --tp-input-foreground-color: hsla(120, 40%, 60%, 1.00);
+  --tp-label-foreground-color: var(--sand-10);
+  --tp-monitor-background-color: hsla(120, 3%, 20%, 1.00);
+  --tp-monitor-foreground-color: hsla(120, 40%, 60%, 0.80);
 }
