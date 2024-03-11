@@ -18,6 +18,11 @@
 @import '@radix-ui/colors/amber-dark.css';
 @import '@radix-ui/colors/amber-dark-alpha.css';
 
+@import '@radix-ui/colors/lime.css';
+@import '@radix-ui/colors/lime-alpha.css';
+@import '@radix-ui/colors/lime-dark.css';
+@import '@radix-ui/colors/lime-dark-alpha.css';
+
 @import '@radix-ui/colors/teal.css';
 @import '@radix-ui/colors/teal-alpha.css';
 @import '@radix-ui/colors/teal-dark.css';
@@ -27,6 +32,11 @@
 @import '@radix-ui/colors/violet-alpha.css';
 @import '@radix-ui/colors/violet-dark.css';
 @import '@radix-ui/colors/violet-dark-alpha.css';
+
+@import '@radix-ui/colors/pink.css';
+@import '@radix-ui/colors/pink-alpha.css';
+@import '@radix-ui/colors/pink-dark.css';
+@import '@radix-ui/colors/pink-dark-alpha.css';
 
 :root {
   /* Font families */
