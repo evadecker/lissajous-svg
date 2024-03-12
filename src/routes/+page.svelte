@@ -2,8 +2,11 @@
 	import { onMount } from 'svelte';
 	import { Pane } from 'tweakpane';
 
-	let params = {
-		angularFrequency: { x: 3, y: 4 },
+	const params = {
+		frequencyA: 3,
+		frequencyB: 4,
+		amplitudeA: 0.8,
+		amplitudeB: 0.8,
 		phaseShift: Math.PI / 2,
 		strokeWidth: 1,
 		curveColor: 'hsl(23, 93%, 53%)',
@@ -105,10 +108,10 @@
 			const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
 			const points = [];
 
-			for (let t = 0; t <= Math.PI * 2 + 0.1; t += 0.01) {
-				const x = Math.sin(a * t + params.phaseShift);
-				const y = Math.sin(b * t);
-				points.push(`${x * 80 + 100},${y * 80 + 100}`);
+			for (let t = 0; t <= Math.PI * 2 + 0.1; t += 0.001) {
+				const x = params.amplitudeA * Math.sin(a * t + params.phaseShift);
+				const y = params.amplitudeB * Math.sin(b * t);
+				points.push(`${x * 100 + 100},${y * 100 + 100}`);
 			}
 
 			path.setAttribute('d', `M${points.join('L')}`);
@@ -119,33 +122,47 @@
 
 		if (svg) {
 			drawGrid(svg, params.gridCount, params.gridStrokeWidth);
-			drawLissajous(svg, params.angularFrequency.x, params.angularFrequency.y);
+			drawLissajous(svg, params.frequencyA, params.frequencyB);
 		}
 	};
 
 	const setupPane = () => {
 		const pane = new Pane({
 			container: document.getElementById('controls')!
+		}).on('change', () => {
+			const state = JSON.stringify(pane.exportState());
+			localStorage.setItem('tweakpane-preset', state);
+			draw();
 		});
 
 		const curve = pane.addFolder({
 			title: 'Lissajous Curve'
 		});
 
-		curve.addBinding(params, 'angularFrequency', {
-			label: 'frequency (a, b)',
-			picker: 'inline',
-			expanded: true,
-			x: {
-				min: -16,
-				max: 16,
-				step: 1
-			},
-			y: {
-				min: -16,
-				max: 16,
-				step: 1
-			}
+		curve.addBinding(params, 'frequencyA', {
+			label: 'frequency (a)',
+			min: 1,
+			max: 20,
+			step: 1
+		});
+
+		curve.addBinding(params, 'frequencyB', {
+			label: 'frequency (b)',
+			min: 1,
+			max: 20,
+			step: 1
+		});
+
+		curve.addBinding(params, 'amplitudeA', {
+			label: 'amplitude (A)',
+			min: 0.1,
+			max: 1,
+		});
+
+		curve.addBinding(params, 'amplitudeB', {
+			label: 'amplitude (B)',
+			min: 0.1,
+			max: 1,
 		});
 
 		curve.addBinding(params, 'phaseShift', {
@@ -202,15 +219,13 @@
 			label: 'color'
 		});
 
-		pane.addBlade({
-			view: 'separator'
+		const buttons = pane.addFolder({
+			title: 'Actions'
 		});
 
-		const btn = pane.addButton({
-			title: 'Download SVG'
-		});
-
-		btn.on('click', () => {
+		buttons.addButton({
+			title: 'Download SVG',
+		}).on('click', () => {
 			const svg = document.querySelector('.canvas');
 
 			if (!svg) return;
@@ -226,23 +241,19 @@
 			document.body.removeChild(a);
 		});
 
-		pane.addBlade({
-			view: 'separator'
-		});
-
-		const source = pane.addButton({
-			title: 'View Source'
-		});
-
-		source.on('click', () => {
+		buttons.addButton({
+			title: 'View Source',
+		}).on('click', () => {
 			window.open('https://github.com/evadecker/lissajous-svg');
 		});
 
-		pane.on('change', () => {
-			const state = JSON.stringify(pane.exportState());
-			localStorage.setItem('tweakpane-preset', state);
-			draw();
+		buttons.addButton({
+			title: 'Reset',
+		}).on('click', () => {
+			pane.importState(initialState);
 		});
+
+		const initialState = pane.exportState();
 
 		const preset = localStorage.getItem('tweakpane-preset');
 		if (preset) {
