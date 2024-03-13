@@ -8,6 +8,7 @@
 		amplitudeA: 0.8,
 		amplitudeB: 0.8,
 		phaseShift: Math.PI / 2,
+		animatePhase: true,
 		strokeWidth: 1,
 		curveColor: 'hsl(23, 93%, 53%)',
 		gridCount: 10,
@@ -96,7 +97,19 @@
 			svg.appendChild(group);
 		};
 
-		const drawLissajous = (svg: Element, a: number, b: number) => {
+		const drawLissajous = (
+			svg: Element,
+			a: number,
+			b: number,
+			ampA: number,
+			ampB: number,
+			phase: number
+		) => {
+			const existingCurve = svg.querySelector('.lissajous');
+			if (existingCurve) {
+				svg.removeChild(existingCurve);
+			}
+
 			const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
 			group.classList.add('lissajous');
 			group.setAttribute('fill', 'none');
@@ -109,8 +122,8 @@
 			const points = [];
 
 			for (let t = 0; t <= Math.PI * 2 + 0.1; t += 0.001) {
-				const x = params.amplitudeA * Math.sin(a * t + params.phaseShift);
-				const y = params.amplitudeB * Math.sin(b * t);
+				const x = ampA * Math.sin(a * t + phase);
+				const y = ampB * Math.sin(b * t);
 				points.push(`${x * 100 + 100},${y * 100 + 100}`);
 			}
 
@@ -122,7 +135,14 @@
 
 		if (svg) {
 			drawGrid(svg, params.gridCount, params.gridStrokeWidth);
-			drawLissajous(svg, params.frequencyA, params.frequencyB);
+			drawLissajous(
+				svg,
+				params.frequencyA,
+				params.frequencyB,
+				params.amplitudeA,
+				params.amplitudeB,
+				params.phaseShift
+			);
 		}
 	};
 
@@ -156,20 +176,20 @@
 		curve.addBinding(params, 'amplitudeA', {
 			label: 'amplitude (A)',
 			min: 0.1,
-			max: 1,
+			max: 1
 		});
 
 		curve.addBinding(params, 'amplitudeB', {
 			label: 'amplitude (B)',
 			min: 0.1,
-			max: 1,
+			max: 1
 		});
 
 		curve.addBinding(params, 'phaseShift', {
 			label: 'phase (δ)',
 			min: 0,
 			max: Math.PI,
-			step: 0.01
+			step: 0.01,
 		});
 
 		curve.addBinding(params, 'strokeWidth', {
@@ -223,39 +243,45 @@
 			title: 'Actions'
 		});
 
-		buttons.addButton({
-			title: 'Download SVG',
-		}).on('click', () => {
-			const svg = document.querySelector('.canvas');
+		buttons
+			.addButton({
+				title: 'Download SVG'
+			})
+			.on('click', () => {
+				const svg = document.querySelector('.canvas');
 
-			if (!svg) return;
-			const svgData = new XMLSerializer().serializeToString(svg);
-			const blob = new Blob([svgData], { type: 'image/svg+xml' });
-			const url = URL.createObjectURL(blob);
+				if (!svg) return;
+				const svgData = new XMLSerializer().serializeToString(svg);
+				const blob = new Blob([svgData], { type: 'image/svg+xml' });
+				const url = URL.createObjectURL(blob);
 
-			const a = document.createElement('a');
-			a.href = url;
-			a.download = 'lissajous.svg';
-			document.body.appendChild(a);
-			a.click();
-			document.body.removeChild(a);
-		});
+				const a = document.createElement('a');
+				a.href = url;
+				a.download = 'lissajous.svg';
+				document.body.appendChild(a);
+				a.click();
+				document.body.removeChild(a);
+			});
 
-		buttons.addButton({
-			title: 'View Source',
-		}).on('click', () => {
-			window.open('https://github.com/evadecker/lissajous-svg');
-		});
+		buttons
+			.addButton({
+				title: 'View Source'
+			})
+			.on('click', () => {
+				window.open('https://github.com/evadecker/lissajous-svg');
+			});
 
-		buttons.addButton({
-			title: 'Reset',
-		}).on('click', () => {
-			pane.importState(initialState);
-		});
+		buttons
+			.addButton({
+				title: 'Reset'
+			})
+			.on('click', () => {
+				pane.importState(initialState);
+			});
 
 		const initialState = pane.exportState();
 
-		const preset = localStorage.getItem('tweakpane-preset');
+		const preset = localStorage.getItem('tweakpane');
 		if (preset) {
 			try {
 				pane.importState(JSON.parse(preset));
