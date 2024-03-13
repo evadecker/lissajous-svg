@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { Pane } from 'tweakpane';
+	import simplifySvgPath from '@luncheon/simplify-svg-path';
 
 	const params = {
 		frequencyA: 3,
@@ -121,15 +122,15 @@
 			const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
 			const points = [];
 
-			for (let t = 0; t <= Math.PI * 2 + 0.1; t += 0.001) {
+			for (let t = 0; t <= Math.PI * 2; t += 0.001) {
 				const x = ampA * Math.sin(a * t + phase);
 				const y = ampB * Math.sin(b * t);
-				points.push(`${x * 100 + 100},${y * 100 + 100}`);
+				points.push({ x: x * 100 + 100, y: y * 100 + 100 });
 			}
 
-			path.setAttribute('d', `M${points.join('L')}`);
+			const simplified = simplifySvgPath(points);
+			path.setAttribute('d', simplified);
 			group.appendChild(path);
-
 			svg.appendChild(group);
 		};
 
@@ -189,7 +190,7 @@
 			label: 'phase (δ)',
 			min: 0,
 			max: Math.PI,
-			step: 0.01,
+			step: 0.01
 		});
 
 		curve.addBinding(params, 'strokeWidth', {

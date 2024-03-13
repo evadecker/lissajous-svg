@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@luncheon/simplify-svg-path':
+    specifier: ^0.2.0
+    version: 0.2.0
   '@radix-ui/colors':
     specifier: ^3.0.0
     version: 3.0.0
@@ -386,6 +389,10 @@ packages:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
+
+  /@luncheon/simplify-svg-path@0.2.0:
+    resolution: {integrity: sha512-zBh9HwFBJUGMbUDf88HleyqcmO81d9Hiv9wxcwBeBLGGfzfEGIuaOSjyAH6f3fvh/pFxF1pEnolY2PzSJxsSAg==}
+    dev: false
 
   /@nodelib/fs.scandir@2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}

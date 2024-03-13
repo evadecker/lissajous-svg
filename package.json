@@ -36,6 +36,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@luncheon/simplify-svg-path": "^0.2.0",
 		"@radix-ui/colors": "^3.0.0",
 		"@tweakpane/core": "^2.0.3",
 		"tweakpane": "^4.0.3"
