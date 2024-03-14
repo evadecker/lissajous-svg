@@ -128,7 +128,7 @@
 				points.push({ x: x * 100 + 100, y: y * 100 + 100 });
 			}
 
-			const simplified = simplifySvgPath(points);
+			const simplified = simplifySvgPath(points, { tolerance: 0.1 });
 			path.setAttribute('d', simplified);
 			group.appendChild(path);
 			svg.appendChild(group);
