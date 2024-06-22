@@ -301,7 +301,6 @@
 <div class="content">
 	<h1 class="visually-hidden">Lissajous Curve Generator</h1>
 	<svg class="canvas" viewBox="0 0 200 200"></svg>
-	<div class="lcd"></div>
 	<div id="controls"></div>
 </div>
 
@@ -345,16 +344,6 @@
 		width: 90vmin;
 		max-width: 100%;
 		flex: 1;
-	}
-
-	.lcd {
-		position: fixed;
-		inset: 0;
-		width: 100%;
-		height: 100%;
-		background: repeating-linear-gradient(#fff, #fff 2px, #000 2px, #000 4px);
-		animation: pulse 0.1s infinite;
-		pointer-events: none;
 	}
 
 	#controls {
