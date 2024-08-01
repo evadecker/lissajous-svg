@@ -1,7 +1,7 @@
 <script>
-  import '$lib/styles/reset.css';
-  import '$lib/styles/theme.css';
-  import '$lib/styles/base.css';
+import "$lib/styles/reset.css";
+import "$lib/styles/theme.css";
+import "$lib/styles/base.css";
 </script>
 
 <main class="main">
